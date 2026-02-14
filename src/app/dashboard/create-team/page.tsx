@@ -109,12 +109,20 @@ export default function CreateTeamPage() {
               )}
             </button>
           </div>
-          <button
-            onClick={() => router.push(`/team/${createdTeam.id}`)}
-            className="w-full py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg"
-          >
-            Go to Team Dashboard
-          </button>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <button
+              onClick={() => router.push(`/team/${createdTeam.id}`)}
+              className="flex-1 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg"
+            >
+              Go to Team Dashboard
+            </button>
+            <button
+              onClick={() => router.push("/dashboard")}
+              className="py-2 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700"
+            >
+              Back to Dashboard
+            </button>
+          </div>
         </div>
       </div>
     );
