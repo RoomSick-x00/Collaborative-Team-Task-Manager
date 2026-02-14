@@ -88,7 +88,7 @@ export default function JoinTeamPage() {
                 }}
                 placeholder="e.g. ABC123"
                 maxLength={8}
-                className="w-full px-4 py-3 border rounded-lg font-mono text-lg tracking-widest text-center uppercase focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-3 border rounded-lg font-mono text-lg tracking-widest text-center uppercase focus:ring-2 focus:ring-primary-500 text-slate-900 bg-white dark:text-slate-100 dark:bg-slate-700 placeholder:text-slate-500"
               />
               <p className="text-xs text-slate-500 mt-1">
                 Ask your team lead for the 6-character code

@@ -59,7 +59,14 @@ export default function CreateTeamPage() {
 
       setCreatedTeam(team);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Failed to create team");
+      const msg =
+        err instanceof Error
+          ? err.message
+          : typeof err === "object" && err !== null && "message" in err
+            ? String((err as { message: unknown }).message)
+            : "Failed to create team";
+      console.error("Create team error:", err);
+      alert(msg);
     } finally {
       setLoading(false);
     }
@@ -133,7 +140,7 @@ export default function CreateTeamPage() {
                 onChange={(e) => setTeamName(e.target.value)}
                 placeholder="e.g. Marketing Team"
                 required
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 text-slate-900 bg-white dark:text-slate-100 dark:bg-slate-700 placeholder:text-slate-500"
               />
             </div>
             <button

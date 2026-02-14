@@ -61,11 +61,12 @@ export default function TeamPage() {
 
       setTeam(teamData);
 
-      const { data: tasksData } = await supabase
+      const { data: tasksData, error: tasksErr } = await supabase
         .from("tasks")
         .select("*")
         .eq("team_id", teamId)
         .order("created_at", { ascending: false });
+      if (tasksErr) console.error("Tasks fetch error:", tasksErr);
       setTasks(tasksData ?? []);
 
       setLoading(false);
@@ -108,14 +109,21 @@ export default function TeamPage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { error } = await supabase.from("tasks").insert({
-      team_id: teamId,
-      title,
-      status: "todo",
-      created_by: user.id,
-    });
+    const { data: newTask, error } = await supabase
+      .from("tasks")
+      .insert({
+        team_id: teamId,
+        title,
+        status: "todo",
+        created_by: user.id,
+      })
+      .select()
+      .single();
 
-    if (!error) setAddTaskTitle("");
+    if (!error && newTask) {
+      setAddTaskTitle("");
+      setTasks((prev) => [newTask as Task, ...prev]);
+    }
     setAdding(false);
   };
 
@@ -215,7 +223,7 @@ export default function TeamPage() {
             onChange={(e) => setAddTaskTitle(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && addTask()}
             placeholder="Add a new task..."
-            className="flex-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary-500"
+            className="flex-1 px-4 py-3 border rounded-xl focus:ring-2 focus:ring-primary-500 text-slate-900 bg-white dark:text-slate-100 dark:bg-slate-700 placeholder:text-slate-500"
           />
           <button
             onClick={addTask}
