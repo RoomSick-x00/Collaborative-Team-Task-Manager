@@ -41,4 +41,29 @@ For live collaboration when team members add/update/delete tasks:
 
 ---
 
+## Run Migration v2 (display names, task assignment, permissions)
+
+After tables and policies are set up, run the v2 migration:
+
+1. In SQL Editor, click **New query**
+2. Copy contents of `supabase/migration-v2.sql`
+3. Paste and **Run**
+
+This adds:
+- `display_name` to team_members
+- `assigned_to` to tasks
+- New permission rules: only assignee can change status; only creator, assignee, or leader can delete
+
+## Run Fix: Join Team by Code (required for join flow)
+
+When users join with a team code from a different account, RLS blocks the lookup. Run:
+
+1. In SQL Editor, **New query**
+2. Copy contents of `supabase/fix-join-team.sql`
+3. **Run**
+
+This creates `get_team_by_code()` so users can join teams with a valid code.
+
+---
+
 After this, try creating a team again in your app.

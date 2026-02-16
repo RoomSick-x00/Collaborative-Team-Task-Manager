@@ -8,6 +8,7 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 export default function JoinTeamPage() {
   const router = useRouter();
   const [code, setCode] = useState("");
+  const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -16,6 +17,10 @@ export default function JoinTeamPage() {
     const trimmedCode = code.trim().toUpperCase();
     if (!trimmedCode || trimmedCode.length < 4) {
       setError("Please enter a valid team code");
+      return;
+    }
+    if (!displayName.trim()) {
+      setError("Please enter your name");
       return;
     }
     setLoading(true);
@@ -28,11 +33,10 @@ export default function JoinTeamPage() {
         return;
       }
 
-      const { data: team, error: teamError } = await supabase
-        .from("teams")
-        .select("id, name")
-        .eq("code", trimmedCode)
-        .single();
+      const { data: teamData, error: teamError } = await supabase
+        .rpc("get_team_by_code", { team_code: trimmedCode });
+
+      const team = Array.isArray(teamData) && teamData.length > 0 ? teamData[0] : null;
 
       if (teamError || !team) {
         setError("Invalid team code. Please check and try again.");
@@ -44,6 +48,7 @@ export default function JoinTeamPage() {
         team_id: team.id,
         user_id: user.id,
         role: "member",
+        display_name: displayName.trim(),
       });
 
       if (memberError) {
@@ -77,6 +82,16 @@ export default function JoinTeamPage() {
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl p-8">
           <h2 className="text-xl font-bold mb-6">Join a Team</h2>
           <form onSubmit={handleJoin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">Your name</label>
+              <input
+                type="text"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                placeholder="e.g. Jane"
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 text-slate-900 bg-white dark:text-slate-100 dark:bg-slate-700 placeholder:text-slate-500 mb-4"
+              />
+            </div>
             <div>
               <label className="block text-sm font-medium mb-1">Team Code</label>
               <input

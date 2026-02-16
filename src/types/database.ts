@@ -54,15 +54,18 @@ export interface Database {
           team_id: string;
           user_id: string;
           role: "owner" | "member";
+          display_name: string | null;
           joined_at: string;
         };
         Insert: {
           team_id: string;
           user_id: string;
           role?: "owner" | "member";
+          display_name?: string | null;
         };
         Update: {
           role?: "owner" | "member";
+          display_name?: string | null;
         };
       };
       tasks: {
@@ -73,6 +76,7 @@ export interface Database {
           description: string | null;
           status: "todo" | "in_progress" | "done";
           created_by: string | null;
+          assigned_to: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -82,11 +86,13 @@ export interface Database {
           description?: string | null;
           status?: "todo" | "in_progress" | "done";
           created_by?: string | null;
+          assigned_to?: string | null;
         };
         Update: {
           title?: string;
           description?: string | null;
           status?: "todo" | "in_progress" | "done";
+          assigned_to?: string | null;
           updated_at?: string;
         };
       };

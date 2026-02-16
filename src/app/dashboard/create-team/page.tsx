@@ -9,13 +9,14 @@ import { Copy, Check, ArrowLeft, Loader2 } from "lucide-react";
 export default function CreateTeamPage() {
   const router = useRouter();
   const [teamName, setTeamName] = useState("");
+  const [leaderName, setLeaderName] = useState("");
   const [loading, setLoading] = useState(false);
   const [createdTeam, setCreatedTeam] = useState<{ id: string; code: string; name: string } | null>(null);
   const [copied, setCopied] = useState(false);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!teamName.trim()) return;
+    if (!teamName.trim() || !leaderName.trim()) return;
     setLoading(true);
 
     try {
@@ -53,6 +54,7 @@ export default function CreateTeamPage() {
         team_id: team.id,
         user_id: user.id,
         role: "owner",
+        display_name: leaderName.trim(),
       });
 
       if (memberError) throw memberError;
@@ -109,16 +111,16 @@ export default function CreateTeamPage() {
               )}
             </button>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col sm:flex-row gap-3 mt-2">
             <button
               onClick={() => router.push(`/team/${createdTeam.id}`)}
-              className="flex-1 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg"
+              className="flex-1 py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg"
             >
               Go to Team Dashboard
             </button>
             <button
               onClick={() => router.push("/dashboard")}
-              className="py-2 border rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700"
+              className="py-3 px-4 border border-slate-300 dark:border-slate-600 rounded-lg text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 font-medium"
             >
               Back to Dashboard
             </button>
@@ -147,6 +149,17 @@ export default function CreateTeamPage() {
                 value={teamName}
                 onChange={(e) => setTeamName(e.target.value)}
                 placeholder="e.g. Marketing Team"
+                required
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 text-slate-900 bg-white dark:text-slate-100 dark:bg-slate-700 placeholder:text-slate-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Your name (as team leader)</label>
+              <input
+                type="text"
+                value={leaderName}
+                onChange={(e) => setLeaderName(e.target.value)}
+                placeholder="e.g. John"
                 required
                 className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 text-slate-900 bg-white dark:text-slate-100 dark:bg-slate-700 placeholder:text-slate-500"
               />
